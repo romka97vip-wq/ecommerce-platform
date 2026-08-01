@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>ShopFlow</title>
+  <style>
+    body { font-family: sans-serif; max-width: 700px; margin: 40px auto; }
+    h1 { color: #2c3e50; }
+    .product { padding: 12px; border-bottom: 1px solid #eee; }
+    .price { color: #27ae60; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>🛒 ShopFlow — Каталог</h1>
+  <div id="products">Загрузка...</div>
+  <script>
+    // Дёргаем catalog через nginx-прокси (путь /api/products)
+    fetch('/api/products')
+      .then(r => r.json())
+      .then(items => {
+        document.getElementById('products').innerHTML = items.map(p =>
+          `<div class="product">${p.name} — <span class="price">$${p.price}</span></div>`
+        ).join('');
+      })
+      .catch(e => {
+        document.getElementById('products').innerHTML = 'Ошибка загрузки каталога';
+      });
+  </script>
+</body>
+</html>

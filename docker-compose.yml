@@ -59,5 +59,12 @@ services:
       - postgres
       - rabbitmq
 
+  frontend:
+    build: ./apps/frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - catalog
+
 volumes:
   postgres_data:
