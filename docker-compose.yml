@@ -33,5 +33,31 @@ services:
     depends_on:
       - redis
 
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  orders:
+    build: ./apps/orders
+    environment:
+      DATABASE_URL: postgresql://catalog:catalog@postgres:5432/catalog
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672/
+    ports:
+      - "8002:8000"
+    depends_on:
+      - postgres
+      - rabbitmq
+
+  worker:
+    build: ./apps/worker
+    environment:
+      DATABASE_URL: postgresql://catalog:catalog@postgres:5432/catalog
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672/
+    depends_on:
+      - postgres
+      - rabbitmq
+
 volumes:
   postgres_data:
