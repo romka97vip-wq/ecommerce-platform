@@ -1,0 +1,18 @@
+services:
+  postgres:
+    image: postgres:14
+    environment:
+      POSTGRES_USER: catalog
+      POSTGRES_PASSWORD: catalog
+      POSTGRES_DB: catalog
+    ports:
+    - "5432:5432"
+
+  catalog:
+    build: ./apps/catalog
+    environment:
+      DATABASE_URL: postgresql://catalog:catalog@postgres:5432/catalog
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
