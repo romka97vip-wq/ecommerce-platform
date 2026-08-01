@@ -19,5 +19,19 @@ services:
     depends_on:
       - postgres
 
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  cart:
+    build: ./apps/cart
+    environment:
+      REDIS_URL: redis://redis:6379/0
+    ports:
+      - "8001:8000"
+    depends_on:
+      - redis
+
 volumes:
   postgres_data:
