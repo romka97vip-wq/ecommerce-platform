@@ -8,6 +8,7 @@ secrets/
 *.key
 id_rsa*
 *secret*.yaml
+!*sealedsecret*.yaml
 
 .terraform/
 node_modules/
