@@ -7,6 +7,7 @@ secrets/
 *.pem
 *.key
 id_rsa*
+*secret*.yaml
 
 .terraform/
 node_modules/
@@ -21,3 +22,6 @@ Thumbs.db
 .vscode/
 .idea/
 
+kubeseal
+*.tar
+*.tar.gz
