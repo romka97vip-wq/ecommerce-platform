@@ -1,0 +1,31 @@
+---
+- name: Setup Shopflow server
+  hosts: shopflow
+  become: true
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: true
+        cache_valid_time: 3600
+
+    - name: Upgrade all packages
+      apt:
+        upgrade: dist
+
+    - name: Download k3s install script
+      get_url:
+        url: https://get.k3s.io
+        dest: /tmp/k3s-install.sh
+        mode: '0755'
+
+    - name: Install k3s
+      command: sh /tmp/k3s-install.sh
+      args:
+        creates: /usr/local/bin/k3s
+
+    - name: Wait for k3s node to be ready
+      command: k3s kubectl get nodes
+      register: k3s_nodes
+      until: "'Ready' in k3s_nodes.stdout"
+      retries: 10
+      delay: 10
