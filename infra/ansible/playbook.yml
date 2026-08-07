@@ -29,3 +29,19 @@
       until: "'Ready' in k3s_nodes.stdout"
       retries: 10
       delay: 10
+
+    - name: Create argocd namespace
+      command: k3s kubectl create namespace argocd
+      args:
+        creates: /tmp/.argocd-ns-created
+      register: argocd_ns
+      failed_when: false
+
+    - name: Install ArgoCD
+      command: k3s kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+
+    - name: Install cert-manager
+      command: k3s kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.16.2/cert-manager.yaml
+
+    - name: Install sealed-secrets controller
+      command: k3s kubectl apply -f https://github.com/bitnami-labs/sealed-secrets/releases/download/v0.27.1/controller.yaml
