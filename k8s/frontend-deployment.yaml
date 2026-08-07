@@ -14,8 +14,8 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: frontend:v1
-          imagePullPolicy: IfNotPresent
+          image: ghcr.io/romka97vip-wq/frontend:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 80
 ---

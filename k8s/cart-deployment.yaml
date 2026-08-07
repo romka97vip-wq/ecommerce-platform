@@ -16,8 +16,8 @@ spec:
     spec:
       containers:
         - name: cart
-          image: cart:v1
-          imagePullPolicy: IfNotPresent
+          image: ghcr.io/romka97vip-wq/cart:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8000
           env:

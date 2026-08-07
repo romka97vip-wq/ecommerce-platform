@@ -14,8 +14,8 @@ spec:
     spec:
       containers:
         - name: worker
-          image: worker:v1
-          imagePullPolicy: IfNotPresent
+          image: ghcr.io/romka97vip-wq/worker:latest
+          imagePullPolicy: Always
           env:
             - name: DATABASE_URL
               valueFrom:

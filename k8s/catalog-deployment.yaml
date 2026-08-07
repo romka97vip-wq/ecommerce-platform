@@ -16,8 +16,8 @@ spec:
     spec:
       containers:
         - name: catalog
-          image: catalog:v1
-          imagePullPolicy: IfNotPresent
+          image: ghcr.io/romka97vip-wq/catalog:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8000
           env:
