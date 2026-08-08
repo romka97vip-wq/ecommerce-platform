@@ -2,9 +2,12 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: shopflow
+  namespace: default
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
   rules:
-    - host: shop.local
+    - host: ecommerce-shop.duckdns.org
       http:
         paths:
           - path: /
@@ -14,3 +17,7 @@ spec:
                 name: frontend
                 port:
                   number: 80
+  tls:
+    - hosts:
+        - ecommerce-shop.duckdns.org
+      secretName: shopflow-tls
