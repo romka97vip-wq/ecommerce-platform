@@ -52,6 +52,7 @@
       systemd:
         name: fail2ban
         state: started
+        enabled: true
 
     - name: Update apt cache
       apt:
@@ -89,6 +90,22 @@
 
     - name: Install ArgoCD
       command: k3s kubectl apply --server-side --force-conflicts -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+
+    - name: Install prometheus-operator CRDs (server-side)
+      command: >
+        k3s kubectl apply --server-side --force-conflicts
+        -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/v0.77.1/example/prometheus-operator-crd-full/monitoring.coreos.com_{{ item }}.yaml
+      loop:
+        - alertmanagerconfigs
+        - alertmanagers
+        - podmonitors
+        - probes
+        - prometheusagents
+        - prometheuses
+        - prometheusrules
+        - scrapeconfigs
+        - servicemonitors
+        - thanosrulers
 
     - name: Install cert-manager
       command: k3s kubectl apply --server-side --force-conflicts -f https://github.com/cert-manager/cert-manager/releases/download/v1.16.2/cert-manager.yaml
