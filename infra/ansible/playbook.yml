@@ -3,6 +3,56 @@
   hosts: shopflow
   become: true
   tasks:
+    # --- HARDENING ---
+    - name: Install security packages
+      apt:
+        name:
+          - ufw
+          - fail2ban
+          - unattended-upgrades
+        state: present
+        update_cache: true
+
+    - name: Allow SSH before enabling firewall
+      community.general.ufw:
+        rule: allow
+        port: '22'
+        proto: tcp
+
+    - name: Allow HTTP
+      community.general.ufw:
+        rule: allow
+        port: '80'
+        proto: tcp
+
+    - name: Allow HTTPS
+      community.general.ufw:
+        rule: allow
+        port: '443'
+        proto: tcp
+
+    - name: Allow k3s API
+      community.general.ufw:
+        rule: allow
+        port: '6443'
+        proto: tcp
+
+    - name: Allow Flannel VXLAN
+      community.general.ufw:
+        rule: allow
+        port: '8472'
+        proto: udp
+
+    - name: Enable ufw
+      community.general.ufw:
+        state: enabled
+        policy: deny
+
+    - name: Enable and start fail2ban
+      systemd:
+        name: fail2ban
+        state: started
+
     - name: Update apt cache
       apt:
         update_cache: true
@@ -38,10 +88,10 @@
       failed_when: false
 
     - name: Install ArgoCD
-      command: k3s kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+      command: k3s kubectl apply --server-side --force-conflicts -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 
     - name: Install cert-manager
-      command: k3s kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.16.2/cert-manager.yaml
+      command: k3s kubectl apply --server-side --force-conflicts -f https://github.com/cert-manager/cert-manager/releases/download/v1.16.2/cert-manager.yaml
 
     - name: Install sealed-secrets controller
       command: k3s kubectl apply -f https://github.com/bitnami-labs/sealed-secrets/releases/download/v0.27.1/controller.yaml
